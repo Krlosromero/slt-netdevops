@@ -9,7 +9,6 @@
 - name: "PLAY 1: Manage NTP configuration"
   hosts: "all"
   tasks:
-
     # This is the first task, and each play generally contains
     # a list of tasks. The task is a set of actions to execute
     # against each host specified within the play. This task
@@ -25,6 +24,8 @@
           - "ntp_server1 | ipv4 == ntp_server1"
           - "ntp_server2 | ipv4 == ntp_server2"
         msg: "Malformed input; please check ntp_server values"
+      tags:
+        - precheck
 
     # This is the second task. It logs into the Cisco IOS or
     # IOS-XE device using the "ios_config" module. The 'lines'
@@ -58,4 +59,3 @@
       debug:
         var: "ntp_updates.updates"
       when: "ntp_updates.updates is defined"
-...
