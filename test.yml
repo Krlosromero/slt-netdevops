@@ -7,8 +7,8 @@
 - name: "PLAY 1: Import original playbook with mock NTP servers"
   import_playbook: "ntp_config.yml"
   vars:
-    ntp_server1: "203.0.113.1"
-    ntp_server2: "203.0.113.2"
+    ntp_server1: "192.168.222.1"
+    ntp_server2: "192.168.222.203"
 
 # This is the second play. Its purpose is to ensure the
 # first play (playbook import) worked correctly. The general
@@ -18,7 +18,6 @@
 - name: "PLAY 2: Log into routers to test playbook"
   hosts: "all"
   tasks:
-
     # This is the first task. It collects information from the
     # router using the "ios_command" module, which is used for
     # non-configuration (exec shell) commands. The command issued
@@ -39,8 +38,8 @@
     - name: "TASK 2: Ensure that mock NTP servers are present"
       assert:
         that:
-          - "'203.0.113.1' in ntp_associations.stdout[0]"
-          - "'203.0.113.2' in ntp_associations.stdout[0]"
+          - "'192.168.222.1' in ntp_associations.stdout[0]"
+          - "'192.168.222.203' in ntp_associations.stdout[0]"
         msg: "Missing required NTP data:\n{{ ntp_associations.stdout[0] }}"
 
     # This is the third task. At this point, we've verified that the
@@ -54,8 +53,8 @@
     - name: "TASK 3: Remove mock NTP servers"
       ios_config:
         lines:
-          - "no ntp server 203.0.113.1"
-          - "no ntp server 203.0.113.2"
+          - "no ntp server 192.168.222.1"
+          - "no ntp server 192.168.222.203"
 
     # This is the fourth task and inserts a short pause using the
     # "pause" module. This allows the router to fully disable its
@@ -81,7 +80,6 @@
     - name: "TASK 6: Ensure mock NTP data is absent"
       assert:
         that:
-          - "'203.0.113.1' not in ntp_associations.stdout[0]"
-          - "'203.0.113.2' not in ntp_associations.stdout[0]"
+          - "'192.168.222.1' not in ntp_associations.stdout[0]"
+          - "'192.168.222.203' not in ntp_associations.stdout[0]"
         msg: "Saw unwanted NTP data:\n{{ ntp_associations.stdout[0] }}"
-...
