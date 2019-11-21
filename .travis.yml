@@ -19,4 +19,4 @@ before_script:
 # A more complex pipeline might deploy on-demand routers ahead of time
 # using Terraform rather than assume they already exist.
 script:
-  - "ansible-playbook test.yml --skip-tags"
+  - "ansible-playbook test.yml --skip-tags precheck"
